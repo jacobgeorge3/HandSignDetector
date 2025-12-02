@@ -189,7 +189,8 @@ class HandSignDetector:
 
     def run(self):
         """Run the main webcam loop."""
-        cap = cv2.VideoCapture(0)
+        # Use camera index 1 for built-in camera (0 is often Continuity Camera on macOS)
+        cap = cv2.VideoCapture(1)
         
         if not cap.isOpened():
             logging.error("Could not open webcam.")
@@ -209,7 +210,9 @@ class HandSignDetector:
                 
                 self.update_plot()
                 
-                if cv2.waitKey(1) == ord('q'):
+                # Check for 'q' or 'Q' key, or ESC key (27)
+                key = cv2.waitKey(1) & 0xFF
+                if key == ord('q') or key == ord('Q') or key == 27:
                     break
         except KeyboardInterrupt:
             logging.info("Interrupted by user.")
